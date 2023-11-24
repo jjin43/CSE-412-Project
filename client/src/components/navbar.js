@@ -1,8 +1,18 @@
-import React from "react";
+import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import "../index.css";
 
 function Navbar() {
+  const [isLoggedIn, setLoginState] = useState(false);
+
+  const handleLogin = () => {
+    setLoginState(true);
+  };
+
+  const handleLogout = () => {
+    setLoginState(false);
+  };
+
   return (
     <nav class="text-black">
       <div class="navbar bg-primary">
@@ -15,6 +25,18 @@ function Navbar() {
         <div class="navbar-end">
           <div class="flex justify-end flex-1 px-2">
             <div class="flex items-stretch">
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  class="btn btn-ghost rounded-btn"
+                >
+                  Logout
+                </button>
+              ) : (
+                <button onClick={handleLogin} class="btn btn-ghost rounded-btn">
+                  Login
+                </button>
+              )}
               <a class="btn btn-ghost rounded-btn">Account</a>
               <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost rounded-btn">
