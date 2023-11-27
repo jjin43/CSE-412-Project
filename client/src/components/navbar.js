@@ -6,6 +6,7 @@ function Navbar() {
   const [isLoggedIn, setLoginState] = useState(false);
 
   const handleLogin = () => {
+    document.getElementById("my_modal_3").close();
     setLoginState(true);
   };
 
@@ -33,10 +34,54 @@ function Navbar() {
                   Logout
                 </button>
               ) : (
-                <button onClick={handleLogin} class="btn btn-ghost rounded-btn">
+                <button
+                  onClick={() =>
+                    document.getElementById("my_modal_3").showModal()
+                  }
+                  class="btn btn-ghost rounded-btn"
+                >
                   Login
                 </button>
               )}
+              <dialog id="my_modal_3" className="modal">
+                <div className="modal-box text-white">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </form>
+                  <h3 className="font-bold text-lg">Login</h3>
+                  <div class="form-control w-full max-w-xs">
+                    <label class="label">
+                      <span class="label-text">Username</span>
+                    </label>
+                    <input
+                      id="username_input"
+                      type="text"
+                      placeholder="Enter your username"
+                      class="input input-bordered w-full max-w-xs"
+                    />
+                    <label class="label"></label>
+                    <label class="label">
+                      <span class="label-text">Password</span>
+                    </label>
+                    <input
+                      id="password_input"
+                      type="password"
+                      placeholder="Enter your password"
+                      class="input input-bordered w-full max-w-xs"
+                    />
+                    <label class="label"></label>
+                  </div>
+                  <button
+                    onClick={handleLogin}
+                    class="btn btn-ghost rounded-btn"
+                  >
+                    Login
+                  </button>
+                  <button class="btn btn-ghost rounded-btn">Sign up</button>
+                </div>
+              </dialog>
               <a class="btn btn-ghost rounded-btn">Account</a>
               <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost rounded-btn">
