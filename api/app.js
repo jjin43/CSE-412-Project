@@ -38,6 +38,10 @@ db.any("SELECT * FROM BIKE")
   });
 //***************************************************************** */
 
+// Fecth Bikes according to filters
+
+
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
