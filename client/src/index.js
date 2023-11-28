@@ -4,9 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./views/App";
 import Home from "./views/Home"
-import Bike from "./views/Bike"
+import Bikes from "./views/Bikes"
 import Misc from "./views/Misc"
-import Login from "./views/Login"
 import Index from "./components/indextest";
 import Navbar from "./components/navbar";
 import reportWebVitals from "./reportWebVitals";
@@ -19,9 +18,8 @@ root.render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/App" element={<App />} />
-        <Route path="/Bike" element={<Bike />} />
+        <Route path="/Bikes" element={<Bikes />} />
         <Route path="/Misc" element={<Misc />} />
-        <Route path="/Login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

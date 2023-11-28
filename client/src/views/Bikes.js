@@ -1,4 +1,4 @@
-import './Bike.css';
+import './Bikes.css';
 
 function Bike() {
   return (
