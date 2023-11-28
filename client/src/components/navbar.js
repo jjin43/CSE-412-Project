@@ -6,6 +6,19 @@ function Navbar() {
   const [isLoggedIn, setLoginState] = useState(false);
 
   const handleLogin = () => {
+    let username, password
+
+    fetch(`http://localhost:3030/login`, {
+      method: 'GET',
+      headers: {
+        'username': username,
+        'password': password
+      }
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+    
     document.getElementById("my_modal_3").close();
     setLoginState(true);
   };
@@ -27,12 +40,15 @@ function Navbar() {
           <div class="flex justify-end flex-1 px-2">
             <div class="flex items-stretch">
               {isLoggedIn ? (
-                <button
-                  onClick={handleLogout}
-                  class="btn btn-ghost rounded-btn"
-                >
-                  Logout
-                </button>
+                <>
+                  <button
+                    onClick={handleLogout}
+                    class="btn btn-ghost rounded-btn"
+                  >
+                    Logout
+                  </button>
+                  <button class="btn btn-ghost rounded-btn">My Orders</button>
+                </>
               ) : (
                 <button
                   onClick={() =>
@@ -53,7 +69,7 @@ function Navbar() {
                   <h3 className="font-bold text-lg">Login</h3>
                   <div class="form-control w-full max-w-xs">
                     <label class="label">
-                      <span class="label-text">Username</span>
+                      <span id="username" class="label-text">Username</span>
                     </label>
                     <input
                       id="username_input"
@@ -63,7 +79,7 @@ function Navbar() {
                     />
                     <label class="label"></label>
                     <label class="label">
-                      <span class="label-text">Password</span>
+                      <span id="password" class="label-text">Password</span>
                     </label>
                     <input
                       id="password_input"
@@ -82,7 +98,6 @@ function Navbar() {
                   <button class="btn btn-ghost rounded-btn">Sign up</button>
                 </div>
               </dialog>
-              <a class="btn btn-ghost rounded-btn">Account</a>
               <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost rounded-btn">
                   Basket
