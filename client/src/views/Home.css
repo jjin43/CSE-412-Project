@@ -1,0 +1,23 @@
+.Home-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+
+  .labeling{
+    display: inline;
+    position:relative;
+    left: 40px;
+    font-family: cursive;
+    font-size: larger;
+  }
+
+  .btnWrapper{
+    padding: 0.5em;
+  }
+  

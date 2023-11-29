@@ -2,7 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
-import App from "./App";
+import App from "./views/App";
+import Home from "./views/Home"
+import Bikes from "./views/Bikes"
+import Misc from "./views/Misc"
 import Index from "./components/indextest";
 import Navbar from "./components/navbar";
 import reportWebVitals from "./reportWebVitals";
@@ -13,8 +16,10 @@ root.render(
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<Home />} />
         <Route path="/App" element={<App />} />
+        <Route path="/Bikes" element={<Bikes />} />
+        <Route path="/Misc" element={<Misc />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
