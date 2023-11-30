@@ -22,20 +22,24 @@ function Misc() {
           <div class="-m-1 flex flex-wrap md:-m-2">
             {item.map((dataObj, index) => {
               return (
-                <div className="flex card w-96 bg-base-100 shadow-xl m-6">
-                  <figure>
-                    <img
-                      src={require("../img/misc/" +
-                        dataObj.mi_item_id +
-                        ".png")}
-                      alt="MiscIMG"
-                    />
-                  </figure>
-                  <div className="card-body">
-                    <h2 className="card-title">{dataObj.mi_item_name}</h2>
-                    <p>${dataObj.mi_item_price}</p>
-                    <div className="card-actions justify-end">
-                      <button className="btn btn-primary">Buy Now</button>
+                <div class="flex w-1/2 flex-wrap">
+                  <div class="w-screen p-1 md:p-2">
+                    <div className="flex card h-screen h-5/6 w-90 bg-base-100 shadow-xl m-6">
+                      <figure>
+                        <img
+                          src={require("../img/misc/" +
+                            dataObj.mi_item_id +
+                            ".png")}
+                          alt="MiscIMG"
+                        />
+                      </figure>
+                      <div className="card-body">
+                        <h2 className="card-title">{dataObj.mi_item_name}</h2>
+                        <h3>${dataObj.mi_item_price}</h3>
+                        <div className="card-actions justify-end">
+                          <button className="btn btn-primary">Buy Now</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

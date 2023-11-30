@@ -24,8 +24,8 @@ function Bike() {
               // flex w-1/[Number of images per row]
               return (
                 <div class="flex w-1/2 flex-wrap">
-                  <div class="w-full p-1 md:p-2">
-                    <div className="flex card w-72 bg-base-100 shadow-xl m-6">
+                  <div class="w-screen p-1 md:p-2">
+                    <div className="flex card h-screen h-5/6 w-90 bg-base-100 shadow-xl m-6">
                       <figure>
                         <img
                           src={require("../img/bikes/" +
@@ -36,7 +36,7 @@ function Bike() {
                       </figure>
                       <div className="card-body">
                         <h2 className="card-title">{dataObj.b_model}</h2>
-                        <p>${dataObj.b_price}</p>
+                        <h3>${dataObj.b_price}</h3>
                         <div className="card-actions justify-end">
                           <button className="btn btn-primary">Buy Now</button>
                         </div>
