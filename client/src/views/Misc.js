@@ -25,8 +25,10 @@ function Misc() {
                 <div className="flex card w-96 bg-base-100 shadow-xl m-6">
                   <figure>
                     <img
-                      src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                      alt="Shoes"
+                      src={require("../img/misc/" +
+                        dataObj.mi_item_id +
+                        ".png")}
+                      alt="MiscIMG"
                     />
                   </figure>
                   <div className="card-body">
