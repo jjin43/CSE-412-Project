@@ -30,13 +30,13 @@ function Navbar() {
   return (
     <nav class="text-black">
       <div class="navbar bg-primary">
-        <div class="navbar-start space-x-5 text-primary-content">
-          <Link to="/">Home</Link>
-          <Link to="/Bikes">Bikes</Link>
-          <Link to="/Misc">Misc</Link>
+        <div class="navbar-start space-x-2 pl-12 text-primary-content">
+          <Link to="/" class="btn btn-ghost rounded-btn">Home</Link>
+          <Link to="/Bikes" class="btn btn-ghost rounded-btn">Bikes</Link>
+          <Link to="/Misc" class="btn btn-ghost rounded-btn">Misc</Link>
         </div>
 
-        <div class="navbar-end">
+        <div class="navbar-end pr-12">
           <div class="flex justify-end flex-1 px-2">
             <div class="flex items-stretch">
               {isLoggedIn ? (
