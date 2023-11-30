@@ -48,20 +48,26 @@ app.get('/ping', (req, res) => {
 app.get('/getBikes', (req, res) => {
   if(req.params.filter==='True'){
     let line = "SELECT * FROM BIKE WHERE "
+    let values = []
+    paramCount = 1
+    
     // Handle filters here
     if(req.params.brand)
-      line = line + "b_brand == '" + req.params.brand.replace(/\s/g,'') + "AND"
+      line = line + "b_brand == $" + paramCount++ + "AND"
+      values.push(req.params.brand)
 
     if(req.params.maxprice)
-      line = line + "b_price <= " + req.params.maxprice.replace(/\s/g,'') + "AND"
+      line = line + "b_price <= $" + paramCount++ + "AND"
+      values.push(req.params.maxprice)
 
     if(req.params.minprice)
-      line = line + "b_price >= " + req.params.minprice.replace(/\s/g,'') + "AND"
+      line = line + "b_price >= $" + paramCount++ + "AND"
+      values.push(req.params.minprice)
 
     //...
 
     line = line + "1==1"
-    db.any(line)
+    db.any(line, values)
     .then((data) => {
       console.log("DATA: ", JSON.stringify(data[0]));
       res.send(data)
@@ -88,8 +94,34 @@ app.get('/getBikes', (req, res) => {
 
 app.get('/getMisc', (req, res) => {
   if(req.params.filter===true){
-    console.log()
-    res.send('Handle filters here')
+    let line = "SELECT * FROM misc_items WHERE "
+    let values = []
+    paramCount = 1
+    
+    // Handle filters here
+    if(req.params.brand)
+      line = line + "mi_item_name == $" + paramCount++ + "AND"
+      values.push(req.params.brand)
+
+    if(req.params.maxprice)
+      line = line + "mi_item_price <= $" + paramCount++ + "AND"
+      values.push(req.params.maxprice)
+
+    if(req.params.minprice)
+      line = line + "mi_item_price >= $" + paramCount++ + "AND"
+      values.push(req.params.minprice)
+
+    line = line + "1==1"
+    db.any(line, values)
+    .then((data) => {
+      console.log("DATA: ", JSON.stringify(data[0]));
+      res.send(data)
+
+    })
+    .catch((error) => {
+      console.log("ERROR:", error);
+      res.end()
+    });
   }
   else{
     db.any("SELECT * FROM misc_items")
@@ -111,8 +143,10 @@ app.get('/login', (req, res) => {
     res.send('Provide Username and Password')
   }
   else{
-    let line = "SELECT * FROM customer WHERE c_name=='" + req.params.username.replace(/\s/g,'') + "' AND c_password=='" + req.params.password.replace(/\s/g,'') + "'" 
-    db.any(line)
+    let line = "SELECT * FROM customer WHERE c_name=='$1' AND c_password=='$2'" 
+    let values = [req.params.username, req.params.password]
+
+    db.any(line, values)
     .then((data) => {
       console.log("DATA: ", JSON.stringify(data[0]));
       res.send(data)
