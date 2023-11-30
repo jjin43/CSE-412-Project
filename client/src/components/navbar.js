@@ -7,6 +7,7 @@ function Navbar() {
 
   const handleLogin = () => {
     let username, password
+    let userID = 0
 
     fetch(`http://localhost:3030/login`, {
       method: 'GET',
@@ -20,7 +21,11 @@ function Navbar() {
     .catch(err => console.error(err));
     
     document.getElementById("my_modal_3").close();
-    setLoginState(true);
+    if(userID==0)
+      setLoginState(false);
+    else
+      setLoginState(true)
+
   };
 
   const handleLogout = () => {

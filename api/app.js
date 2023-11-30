@@ -143,13 +143,17 @@ app.get('/login', (req, res) => {
     res.send('Provide Username and Password')
   }
   else{
-    let line = "SELECT * FROM customer WHERE c_name=='$1' AND c_password=='$2'" 
+    let line = "SELECT * FROM customer WHERE c_email=='$1' AND c_password=='$2'" 
     let values = [req.params.username, req.params.password]
 
     db.any(line, values)
     .then((data) => {
-      console.log("DATA: ", JSON.stringify(data[0]));
-      res.send(data)
+      let userID = JSON.parse(data).c_customer_id
+      if(!userID)
+        res.send(userID)
+      else
+        res.send(0)
+
     })
     .catch((error) => {
       console.log("ERROR:", error);
