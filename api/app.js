@@ -100,15 +100,15 @@ app.get('/getMisc', (req, res) => {
     
     // Handle filters here
     if(req.params.brand)
-      line = line + "mi_name == $" + paramCount++ + "AND"
+      line = line + "mi_item_name == $" + paramCount++ + "AND"
       values.push(req.params.brand)
 
     if(req.params.maxprice)
-      line = line + "mi_price <= $" + paramCount++ + "AND"
+      line = line + "mi_item_price <= $" + paramCount++ + "AND"
       values.push(req.params.maxprice)
 
     if(req.params.minprice)
-      line = line + "mi_price >= $" + paramCount++ + "AND"
+      line = line + "mi_item_price >= $" + paramCount++ + "AND"
       values.push(req.params.minprice)
 
     line = line + "1==1"
