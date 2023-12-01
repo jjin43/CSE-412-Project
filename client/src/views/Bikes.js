@@ -5,9 +5,17 @@ function Bike() {
   const [item, setItem] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [brand, setBrand] = useState("");
+  const [minPrice, setMinPrice] = useState(-1);
+  const [maxPrice, setMaxPrice] = useState(-1);
+
+  const getBikes = async () => {};
+
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:3030/getBikes")
+    fetch(
+      "http://localhost:3030/getBikes?filter=true&brand=Trek&minPrice=999.99&maxPrice=9999.99"
+    )
       .then((response) => response.json())
       .then((item) => setItem(item))
       .finally(() => setLoading(false));
@@ -15,17 +23,74 @@ function Bike() {
 
   // Need to implement filters still
 
+  const applyFilters = async () => {
+    console.log("filters applied!");
+  };
+
   return (
     <div className="Bike">
       <header className="App-header">
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
           <div class="-m-1 flex flex-wrap md:-m-2">
+            <div className="drawer">
+              <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+              <div className="drawer-content">
+                {/* Page content here */}
+                <label
+                  htmlFor="my-drawer"
+                  className="btn btn-primary drawer-button"
+                >
+                  Filters
+                </label>
+              </div>
+              <div className="drawer-side">
+                <label
+                  htmlFor="my-drawer"
+                  aria-label="close sidebar"
+                  className="drawer-overlay"
+                ></label>
+                <ul className="menu p-6 w-80 min-h-full bg-base-200 text-base-content">
+                  {/* Sidebar content here */}
+                  <li>
+                    <select className="select select-bordered max-w-xs m-2">
+                      <option disabled selected>
+                        Brand
+                      </option>
+                      <option>Gucci</option>
+                      <option>Trek</option>
+                    </select>
+                  </li>
+                  <li>
+                    <input
+                      type="number"
+                      placeholder="Minimum Price"
+                      className="input input-bordered max-w-xs m-2"
+                    />
+                  </li>
+                  <li>
+                    <input
+                      type="number"
+                      placeholder="Maximum Price"
+                      className="input input-bordered max-w-xs m-2"
+                    />
+                  </li>
+                  <li>
+                    <button
+                      className="btn btn-primary m-2"
+                      onClick={applyFilters}
+                    >
+                      Apply Filters
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
             {item.map((dataObj, index) => {
               // flex w-1/[Number of images per row]
               return (
-                <div class="flex w-1/2 flex-wrap">
+                <div class="flex w-1/3 flex-wrap">
                   <div class="w-screen p-1 md:p-2">
-                    <div className="flex card h-screen h-5/6 w-90 bg-base-100 shadow-xl m-6">
+                    <div className="flex card h-screen h-full w-90 bg-base-100 shadow-xl m-2">
                       <figure>
                         <img
                           src={require("../img/bikes/" +

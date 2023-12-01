@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
-app.disable('etag');
+app.disable("etag");
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -40,125 +40,122 @@ db.any("SELECT * FROM BIKE")
   });
 //***************************************************************** */
 
-app.get('/ping', (req, res) => {
-  res.send('pong')
-})
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
 
 // Fecth Bikes data, default SELECT *, filter fields pass through param
-app.get('/getBikes', (req, res) => {
-  if(req.params.filter==='True'){
-    let line = "SELECT * FROM BIKE WHERE "
-    let values = []
-    paramCount = 1
-    
+app.get("/getBikes", (req, res) => {
+  console.log(req.query);
+  if (req.query.filter === "true") {
+    let line = "SELECT * FROM bike WHERE ";
+    let values = [];
+    let paramCount = 1;
+
     // Handle filters here
-    if(req.params.brand)
-      line = line + "b_brand == $" + paramCount++ + "AND"
-      values.push(req.params.brand)
+    if (req.query.brand) {
+      line = line + "b_brand_name=$" + paramCount++ + " AND ";
+      values.push(req.query.brand);
+    }
 
-    if(req.params.maxprice)
-      line = line + "b_price <= $" + paramCount++ + "AND"
-      values.push(req.params.maxprice)
+    if (req.query.maxPrice) {
+      line = line + "b_price<=$" + paramCount++ + " AND ";
+      values.push(req.query.maxPrice);
+    }
 
-    if(req.params.minprice)
-      line = line + "b_price >= $" + paramCount++ + "AND"
-      values.push(req.params.minprice)
+    if (req.query.minPrice) {
+      line = line + "b_price>=$" + paramCount++ + " AND ";
+      values.push(req.query.minPrice);
+    }
 
     //...
 
-    line = line + "1==1"
-    db.any(line, values)
-    .then((data) => {
-      console.log("DATA: ", JSON.stringify(data[0]));
-      res.send(data)
-    })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      res.end()
-    });
+    line = line + "1=1;";
+    console.log(line);
 
-  }
-  else{
+    db.any(line, values)
+      .then((data) => {
+        console.log("DATA: ", JSON.stringify(data[0]));
+        res.send(data);
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
+  } else {
     db.any("SELECT * FROM BIKE")
-    .then((data) => {
-      console.log("DATA: ", JSON.stringify(data[0]));
-      res.send(data)
-    })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      res.end()
-    });
+      .then((data) => {
+        console.log("DATA: ", JSON.stringify(data[0]));
+        res.send(data);
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
   }
+});
 
-})
+app.get("/getMisc", (req, res) => {
+  if (req.params.filter === true) {
+    let line = "SELECT * FROM misc_items WHERE ";
+    let values = [];
+    let paramCount = 1;
 
-app.get('/getMisc', (req, res) => {
-  if(req.params.filter===true){
-    let line = "SELECT * FROM misc_items WHERE "
-    let values = []
-    paramCount = 1
-    
     // Handle filters here
-    if(req.params.brand)
-      line = line + "mi_item_name == $" + paramCount++ + "AND"
-      values.push(req.params.brand)
+    if (req.params.brand)
+      line = line + "mi_item_name == $" + paramCount++ + "AND";
+    values.push(req.params.brand);
 
-    if(req.params.maxprice)
-      line = line + "mi_item_price <= $" + paramCount++ + "AND"
-      values.push(req.params.maxprice)
+    if (req.params.maxprice)
+      line = line + "mi_item_price <= $" + paramCount++ + "AND";
+    values.push(req.params.maxprice);
 
-    if(req.params.minprice)
-      line = line + "mi_item_price >= $" + paramCount++ + "AND"
-      values.push(req.params.minprice)
+    if (req.params.minprice)
+      line = line + "mi_item_price >= $" + paramCount++ + "AND";
+    values.push(req.params.minprice);
 
-    line = line + "1==1"
+    line = line + "1==1";
     db.any(line, values)
-    .then((data) => {
-      console.log("DATA: ", JSON.stringify(data[0]));
-      res.send(data)
-
-    })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      res.end()
-    });
-  }
-  else{
+      .then((data) => {
+        console.log("DATA: ", JSON.stringify(data[0]));
+        res.send(data);
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
+  } else {
     db.any("SELECT * FROM misc_items")
-    .then((data) => {
-      console.log("DATA: ", JSON.stringify(data[0]));
-      res.send(data)
-    })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      res.end()
-    });
+      .then((data) => {
+        console.log("DATA: ", JSON.stringify(data[0]));
+        res.send(data);
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
   }
+});
 
-})
-
-app.get('/login', (req, res) => {
-  if(!req.params.username || !req.params.password){
-    console.log("Incomplete Login")
-    res.send('Provide Username and Password')
-  }
-  else{
-    let line = "SELECT * FROM customer WHERE c_name=='$1' AND c_password=='$2'" 
-    let values = [req.params.username, req.params.password]
+app.get("/login", (req, res) => {
+  if (!req.params.username || !req.params.password) {
+    console.log("Incomplete Login");
+    res.send("Provide Username and Password");
+  } else {
+    let line = "SELECT * FROM customer WHERE c_name=='$1' AND c_password=='$2'";
+    let values = [req.params.username, req.params.password];
 
     db.any(line, values)
-    .then((data) => {
-      console.log("DATA: ", JSON.stringify(data[0]));
-      res.send(data)
-    })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      res.end()
-    });
+      .then((data) => {
+        console.log("DATA: ", JSON.stringify(data[0]));
+        res.send(data);
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
   }
-
-})
-
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
