@@ -27,6 +27,10 @@ function Bike() {
     console.log("filters applied!");
   };
 
+  const removeFilters = async () => {
+    console.log("filters removed!");
+  };
+
   return (
     <div className="Bike">
       <header className="App-header">
@@ -56,6 +60,7 @@ function Bike() {
                       <option disabled selected>
                         Brand
                       </option>
+                      {/* Needs a query for getting the brands. */}
                       <option>Gucci</option>
                       <option>Trek</option>
                     </select>
@@ -76,10 +81,18 @@ function Bike() {
                   </li>
                   <li>
                     <button
-                      className="btn btn-primary m-2"
+                      className="btn btn-primary m-2 p-3.5"
                       onClick={applyFilters}
                     >
                       Apply Filters
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="btn btn-primary m-2 p-3.5"
+                      onClick={removeFilters}
+                    >
+                      Remove Filters
                     </button>
                   </li>
                 </ul>
@@ -90,7 +103,7 @@ function Bike() {
               return (
                 <div class="flex w-1/3 flex-wrap">
                   <div class="w-screen p-1 md:p-2">
-                    <div className="flex card h-screen h-full w-90 bg-base-100 shadow-xl m-2">
+                    <div className="flex card h-full w-90 bg-base-100 shadow-xl m-2">
                       <figure>
                         <img
                           src={require("../img/bikes/" +
