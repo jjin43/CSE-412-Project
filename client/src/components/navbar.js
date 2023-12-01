@@ -64,7 +64,7 @@ function Navbar() {
                   >
                     Logout
                   </button>
-                  <button class="btn btn-ghost rounded-btn">My Orders</button>
+                  <Link to="/Account" class="btn btn-ghost rounded-btn">My Orders</Link>
                 </>
               ) : (
                 <button
