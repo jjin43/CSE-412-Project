@@ -3,15 +3,12 @@ import { React, useState, useEffect } from "react";
 
 function Misc() {
   const [item, setItem] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     fetch("http://localhost:3030/getMisc")
       .then((response) => response.json())
-      .then((item) => setItem(item))
-      .finally(() => setLoading(false));
-  }, []);
+      .then((item) => setItem(item));
+    }, []);
 
   // Need to implement filters still
 
