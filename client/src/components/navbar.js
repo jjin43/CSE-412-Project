@@ -1,30 +1,40 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
+
 import "../index.css";
+import "./cookie"
 
 function Navbar() {
   const [isLoggedIn, setLoginState] = useState(false);
-
+  
   const handleLogin = () => {
-    let username, password
-    let userID = 0
+    let username = document.getElementById("username_input")
+    let password = document.getElementById("password_inpput")
+    let curr_userID = 0
 
     fetch(`http://localhost:3030/login`, {
-      method: 'GET',
-      headers: {
+      method: 'POST',
+      params: {
         'username': username,
         'password': password
       }
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => curr_userID=parseInt(data))
     .catch(err => console.error(err));
     
     document.getElementById("my_modal_3").close();
-    if(userID==0)
-      setLoginState(false);
-    else
+
+    // ID == 0 : Account doesn't exist
+    // ID == -1 : Incomplete Login
+    if(curr_userID===0 || curr_userID===-1){
+      setLoginState(false)
+    }
+    else{
+      global.cookie.userID = curr_userID
+      console.log(global.cookie.userID)
       setLoginState(true)
+    }
 
   };
 

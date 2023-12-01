@@ -137,10 +137,10 @@ app.get('/getMisc', (req, res) => {
 
 })
 
-app.get('/login', (req, res) => {
+app.post('/login', (req, res) => {
   if(!req.params.username || !req.params.password){
     console.log("Incomplete Login")
-    res.send('Provide Username and Password')
+    res.send('-1')
   }
   else{
     let line = "SELECT * FROM customer WHERE c_email=='$1' AND c_password=='$2'" 
@@ -148,11 +148,13 @@ app.get('/login', (req, res) => {
 
     db.any(line, values)
     .then((data) => {
-      let userID = JSON.parse(data).c_customer_id
-      if(!userID)
+      let userID = JSON.parse(data).c_customer_id.toString()
+      if(userID){
+        console.log("Login Succeed - user: " + userID)
         res.send(userID)
+      }
       else
-        res.send(0)
+        res.send('0')
 
     })
     .catch((error) => {
