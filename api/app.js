@@ -172,7 +172,6 @@ app.get("/getUser/:userId", (req, res) => {
   db.any(custInfoQuery, values)
     .then((data) => {
       let result = { userInfo: {}, orders: [] };
-      console.log(data[0]);
       result["userInfo"] = data[0];
 
       db.any(ordersInfoQuery, values)

@@ -1,46 +1,50 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import "../index.css";
-import "./cookie"
+import "./getCookie";
+import { setCookie, getCookie } from "./getCookie";
 
 function Navbar() {
   const [isLoggedIn, setLoginState] = useState(false);
-  
+
+  useEffect(() => {
+    if (getCookie() != null) {
+      setLoginState(true);
+    }
+  });
+
   const handleLogin = async () => {
     const username = document.getElementById("username_input").value;
     const password = document.getElementById("password_input").value;
     let curr_userID = 0;
 
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: new Headers({
-        'username': username,
-        'password': password
-      })
-    }
+        username: username,
+        password: password,
+      }),
+    };
 
     document.getElementById("my_modal_3").close();
 
     const response = await fetch(`http://localhost:3030/login`, requestOptions);
     curr_userID = await response.json();
-    
+
     // ID == 0 : Account doesn't exist
     // ID == -1 : Incomplete Login
-    if(curr_userID===0 || curr_userID===-1){
-      setLoginState(false)
-      console.log('login failed')
+    if (curr_userID === 0 || curr_userID === -1) {
+      setLoginState(false);
+      console.log("login failed");
+    } else {
+      setCookie(curr_userID);
+      setLoginState(true);
+      console.log("login success");
     }
-    else{
-      global.cookie.userID = curr_userID
-      console.log(global.cookie.userID)
-      setLoginState(true)
-      console.log('login success')
-    }
-
   };
 
   const handleLogout = () => {
+    document.cookie = "userID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setLoginState(false);
   };
 
@@ -64,7 +68,9 @@ function Navbar() {
                   >
                     Logout
                   </button>
-                  <Link to="/Account" class="btn btn-ghost rounded-btn">My Orders</Link>
+                  <Link to="/Account" class="btn btn-ghost rounded-btn">
+                    My Orders
+                  </Link>
                 </>
               ) : (
                 <button
@@ -86,7 +92,9 @@ function Navbar() {
                   <h3 className="font-bold text-lg">Login</h3>
                   <div class="form-control w-full max-w-xs">
                     <label class="label">
-                      <span id="username" class="label-text">Username</span>
+                      <span id="username" class="label-text">
+                        Username
+                      </span>
                     </label>
                     <input
                       id="username_input"
@@ -96,7 +104,9 @@ function Navbar() {
                     />
                     <label class="label"></label>
                     <label class="label">
-                      <span id="password" class="label-text">Password</span>
+                      <span id="password" class="label-text">
+                        Password
+                      </span>
                     </label>
                     <input
                       id="password_input"
