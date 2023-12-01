@@ -7,33 +7,35 @@ import "./cookie"
 function Navbar() {
   const [isLoggedIn, setLoginState] = useState(false);
   
-  const handleLogin = () => {
-    let username = document.getElementById("username_input")
-    let password = document.getElementById("password_inpput")
-    let curr_userID = 0
+  const handleLogin = async () => {
+    const username = document.getElementById("username_input").value;
+    const password = document.getElementById("password_input").value;
+    let curr_userID = 0;
 
-    fetch(`http://localhost:3030/login`, {
+    const requestOptions = {
       method: 'POST',
-      params: {
+      headers: new Headers({
         'username': username,
         'password': password
-      }
-    })
-    .then(response => response.json())
-    .then(data => curr_userID=parseInt(data))
-    .catch(err => console.error(err));
-    
+      })
+    }
+
     document.getElementById("my_modal_3").close();
 
+    const response = await fetch(`http://localhost:3030/login`, requestOptions);
+    curr_userID = await response.json();
+    
     // ID == 0 : Account doesn't exist
     // ID == -1 : Incomplete Login
     if(curr_userID===0 || curr_userID===-1){
       setLoginState(false)
+      console.log('login failed')
     }
     else{
       global.cookie.userID = curr_userID
       console.log(global.cookie.userID)
       setLoginState(true)
+      console.log('login success')
     }
 
   };

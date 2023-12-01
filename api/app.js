@@ -138,20 +138,23 @@ app.get('/getMisc', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-  if(!req.params.username || !req.params.password){
+  if(!req.headers.username || !req.headers.password){
     console.log("Incomplete Login")
     res.send('-1')
   }
   else{
-    let line = "SELECT * FROM customer WHERE c_email=='$1' AND c_password=='$2'" 
-    let values = [req.params.username, req.params.password]
+    let line = "SELECT * FROM customer WHERE c_email=$1 AND c_password=$2;" 
+    let values = [req.headers.username, req.headers.password]
 
     db.any(line, values)
     .then((data) => {
-      let userID = JSON.parse(data).c_customer_id.toString()
+      console.log(data[0].c_customer_id);
+      // Somewhat scuffed way of getting this info, but theoretically,
+      // this query should only return one tuple.
+      let userID = data[0].c_customer_id;
       if(userID){
         console.log("Login Succeed - user: " + userID)
-        res.send(userID)
+        res.send(`${userID}`);
       }
       else
         res.send('0')
