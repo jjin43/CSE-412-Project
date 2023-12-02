@@ -130,6 +130,26 @@ app.get("/getMisc", (req, res) => {
   }
 });
 
+app.post("/signup", (req, res) => {
+  if(!req.params.name || !req.params.email || !req.params.c_password || !req.params.c_payment_method){
+    console.log("Sign-up with insufficient parameter")
+    res.send("Missing Sign-up Information")
+  }
+
+  values = [req.params.name, req.params.email, req.params.c_password, req.params.c_payment_method]
+  let line = "INSERT INTO customer (c_name, c_email, c_password, c_payment_method) VALUES ($1, $2, $3, $4)"
+  
+  db.any(line, values)
+  .then((data) => {
+    console.log("DATA: ", JSON.stringify(data[0]));
+    res.send("Success");
+  })
+  .catch((error) => {
+    console.log("ERROR:", error);
+    res.send("Failed");
+  });
+});
+
 app.post("/login", (req, res) => {
   if (!req.headers.username || !req.headers.password) {
     console.log("Incomplete Login");
