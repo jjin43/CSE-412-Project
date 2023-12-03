@@ -4,6 +4,8 @@ import { React, useState, useEffect } from "react";
 function Bike() {
   const [item, setItem] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   const [brand, setBrand] = useState("");
   const [minPrice, setMinPrice] = useState(-1);
   const [maxPrice, setMaxPrice] = useState(-1);
@@ -20,9 +22,7 @@ function Bike() {
         console.log(item);
         setBikeBrands(item);
       });
-    fetch(
-      "http://localhost:3030/getBikes?filter=true&brand=Trek&minPrice=999.99&maxPrice=9999.99"
-    )
+    fetch("http://localhost:3030/getBikes")
       .then((response) => response.json())
       .then((item) => setItem(item));
   }, []);
