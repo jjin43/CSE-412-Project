@@ -85,7 +85,7 @@ app.get("/getBikes", (req, res) => {
 
     line = line + "1=1;";
     console.log(line);
-
+    
     db.any(line, values)
       .then((data) => {
         console.log("DATA: ", JSON.stringify(data[0]));
@@ -150,24 +150,65 @@ app.get("/getMisc", (req, res) => {
   }
 });
 
-app.get("/login", (req, res) => {
-  if (!req.params.username || !req.params.password) {
+app.post("/login", (req, res) => {
+  if (!req.headers.username || !req.headers.password) {
     console.log("Incomplete Login");
-    res.send("Provide Username and Password");
+    res.send("-1");
   } else {
-    let line = "SELECT * FROM customer WHERE c_name=='$1' AND c_password=='$2'";
-    let values = [req.params.username, req.params.password];
+    let line = "SELECT * FROM customer WHERE c_email=$1 AND c_password=$2;";
+    let values = [req.headers.username, req.headers.password];
 
     db.any(line, values)
       .then((data) => {
-        console.log("DATA: ", JSON.stringify(data[0]));
-        res.send(data);
+        console.log(data[0].c_customer_id);
+        // Somewhat scuffed way of getting this info, but theoretically,
+        // this query should only return one tuple.
+        let userID = data[0].c_customer_id;
+        if (userID) {
+          console.log("Login Succeed - user: " + userID);
+          res.send(`${userID}`);
+        } else res.send("0");
       })
       .catch((error) => {
         console.log("ERROR:", error);
         res.end();
       });
   }
+});
+
+app.get("/getUser/:userId", (req, res) => {
+  console.log(req.params.userId);
+  const userId = req.params.userId;
+  if (!req.params.userId) {
+    console.log("no user id provided");
+    res.end();
+    return;
+  }
+
+  const custInfoQuery = "SELECT * FROM customer WHERE c_customer_id=$1;";
+  const ordersInfoQuery = "SELECT * FROM orders WHERE o_customer_id=$1;";
+  const values = [userId];
+
+  db.any(custInfoQuery, values)
+    .then((data) => {
+      let result = { userInfo: {}, orders: [] };
+      result["userInfo"] = data[0];
+
+      db.any(ordersInfoQuery, values)
+        .then((data) => {
+          result["orders"] = data;
+          console.log(result);
+          res.send(result);
+        })
+        .catch((error) => {
+          console.log("ERROR: ", error);
+          res.end();
+        });
+    })
+    .catch((error) => {
+      console.log("ERROR: ", error);
+      res.end();
+    });
 });
 
 // catch 404 and forward to error handler

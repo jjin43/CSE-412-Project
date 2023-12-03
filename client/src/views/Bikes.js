@@ -3,7 +3,6 @@ import { React, useState, useEffect } from "react";
 
 function Bike() {
   const [item, setItem] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const [brand, setBrand] = useState("");
   const [minPrice, setMinPrice] = useState(-1);
@@ -25,8 +24,7 @@ function Bike() {
       "http://localhost:3030/getBikes?filter=true&brand=Trek&minPrice=999.99&maxPrice=9999.99"
     )
       .then((response) => response.json())
-      .then((item) => setItem(item))
-      .finally(() => setLoading(false));
+      .then((item) => setItem(item));
   }, []);
 
   // Need to implement filters still
