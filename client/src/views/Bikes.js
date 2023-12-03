@@ -9,10 +9,18 @@ function Bike() {
   const [minPrice, setMinPrice] = useState(-1);
   const [maxPrice, setMaxPrice] = useState(-1);
 
+  const [bikeBrands, setBikeBrands] = useState([]);
+
   const getBikes = async () => {};
 
   useEffect(() => {
     setLoading(true);
+    fetch("http://localhost:3030/getBikeBrands")
+      .then((response) => response.json())
+      .then((item) => {
+        console.log(item);
+        setBikeBrands(item);
+      });
     fetch(
       "http://localhost:3030/getBikes?filter=true&brand=Trek&minPrice=999.99&maxPrice=9999.99"
     )
@@ -24,10 +32,34 @@ function Bike() {
   // Need to implement filters still
 
   const applyFilters = async () => {
+    const brand =
+      document.getElementById("brand-filter").value === "Brand"
+        ? ""
+        : document.getElementById("brand-filter").value;
+    const minPrice = document.getElementById("min-price-filter").value;
+    const maxPrice = document.getElementById("max-price-filter").value;
+
+    setLoading(true);
+    fetch(
+      `http://localhost:3030/getBikes?filter=true&brand=${brand}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    )
+      .then((response) => response.json())
+      .then((item) => setItem(item))
+      .finally(() => setLoading(false));
     console.log("filters applied!");
   };
 
   const removeFilters = async () => {
+    document.getElementById("brand-filter").value = "Brand";
+    document.getElementById("min-price-filter").value = "";
+    document.getElementById("max-price-filter").value = "";
+
+    setLoading(true);
+    fetch(`http://localhost:3030/getBikes?filter=false`)
+      .then((response) => response.json())
+      .then((item) => setItem(item))
+      .finally(() => setLoading(false));
+
     console.log("filters removed!");
   };
 
@@ -53,16 +85,20 @@ function Bike() {
                   aria-label="close sidebar"
                   className="drawer-overlay"
                 ></label>
-                <ul className="menu p-6 w-80 min-h-full bg-base-200 text-base-content">
+                <ul className="menu p-6 w-80 min-h-full bg-base-200 text-base-content z-10">
                   {/* Sidebar content here */}
                   <li>
-                    <select className="select select-bordered max-w-xs m-2">
+                    <select
+                      className="select select-bordered max-w-xs m-2"
+                      id="brand-filter"
+                    >
                       <option disabled selected>
                         Brand
                       </option>
                       {/* Needs a query for getting the brands. */}
-                      <option>Gucci</option>
-                      <option>Trek</option>
+                      {bikeBrands.map((brand) => {
+                        return <option>{brand}</option>;
+                      })}
                     </select>
                   </li>
                   <li>
@@ -70,6 +106,7 @@ function Bike() {
                       type="number"
                       placeholder="Minimum Price"
                       className="input input-bordered max-w-xs m-2"
+                      id="min-price-filter"
                     />
                   </li>
                   <li>
@@ -77,6 +114,7 @@ function Bike() {
                       type="number"
                       placeholder="Maximum Price"
                       className="input input-bordered max-w-xs m-2"
+                      id="max-price-filter"
                     />
                   </li>
                   <li>
@@ -115,6 +153,7 @@ function Bike() {
                       <div className="card-body">
                         <h2 className="card-title">{dataObj.b_model}</h2>
                         <h3>${dataObj.b_price}</h3>
+                        <p className="text-sm">{dataObj.b_brand_name}</p>
                         <div className="card-actions justify-end">
                           <button className="btn btn-primary">Buy Now</button>
                         </div>

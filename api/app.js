@@ -44,6 +44,19 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
+app.get("/getBikeBrands", (req, res) => {
+  console.log(req.query);
+  const line = "SELECT DISTINCT b_brand_name FROM bike";
+  db.any(line).then((data) => {
+    let brands = [];
+    data.map((brand) => {
+      return brands.push(brand.b_brand_name);
+    });
+    console.log(brands);
+    res.send(brands);
+  });
+});
+
 // Fecth Bikes data, default SELECT *, filter fields pass through param
 app.get("/getBikes", (req, res) => {
   console.log(req.query);
