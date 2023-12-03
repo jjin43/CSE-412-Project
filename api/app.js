@@ -44,28 +44,48 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
+app.get("/getBikeBrands", (req, res) => {
+  console.log(req.query);
+  const line = "SELECT DISTINCT b_brand_name FROM bike";
+  db.any(line).then((data) => {
+    let brands = [];
+    data.map((brand) => {
+      return brands.push(brand.b_brand_name);
+    });
+    console.log(brands);
+    res.send(brands);
+  });
+});
+
 // Fecth Bikes data, default SELECT *, filter fields pass through param
 app.get("/getBikes", (req, res) => {
-  if (req.params.filter === "True") {
-    let line = "SELECT * FROM BIKE WHERE ";
+  console.log(req.query);
+  if (req.query.filter === "true") {
+    let line = "SELECT * FROM bike WHERE ";
     let values = [];
     let paramCount = 1;
 
     // Handle filters here
-    if (req.params.brand) line = line + "b_brand == $" + paramCount++ + "AND";
-    values.push(req.params.brand);
+    if (req.query.brand) {
+      line = line + "b_brand_name=$" + paramCount++ + " AND ";
+      values.push(req.query.brand);
+    }
 
-    if (req.params.maxprice)
-      line = line + "b_price <= $" + paramCount++ + "AND";
-    values.push(req.params.maxprice);
+    if (req.query.maxPrice) {
+      line = line + "b_price<=$" + paramCount++ + " AND ";
+      values.push(req.query.maxPrice);
+    }
 
-    if (req.params.minprice)
-      line = line + "b_price >= $" + paramCount++ + "AND";
-    values.push(req.params.minprice);
+    if (req.query.minPrice) {
+      line = line + "b_price>=$" + paramCount++ + " AND ";
+      values.push(req.query.minPrice);
+    }
 
     //...
 
-    line = line + "1==1";
+    line = line + "1=1;";
+    console.log(line);
+    
     db.any(line, values)
       .then((data) => {
         console.log("DATA: ", JSON.stringify(data[0]));
