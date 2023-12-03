@@ -72,7 +72,6 @@ function Navbar() {
 
     document.getElementById('signup_return').showModal()
     document.getElementById('signup_modal').close();
-
   
   }
 
