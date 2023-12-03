@@ -70,8 +70,9 @@ function Navbar() {
     })
     .catch((error)=>(setSignupMsg("Server Error, Try again later")));
 
-    document.getElementById("my_modal_3").close();
     document.getElementById('signup_return').showModal()
+    document.getElementById('signup_modal').close();
+
   
   }
 
@@ -88,7 +89,7 @@ function Navbar() {
       }),
     };
 
-    document.getElementById("my_modal_3").close();
+    document.getElementById("login_modal").close();
 
     const response = await fetch(`http://localhost:3030/login`, requestOptions);
     curr_userID = await response.json();
@@ -138,7 +139,7 @@ function Navbar() {
               ) : (
                 <button
                   onClick={() =>
-                    document.getElementById("my_modal_3").showModal()
+                    document.getElementById("login_modal").showModal()
                   }
                   class="btn btn-ghost rounded-btn"
                 >
@@ -156,7 +157,7 @@ function Navbar() {
                   </div>
                 </div>
               </dialog>
-              <dialog id="my_modal_3" className="modal">
+              <dialog id="login_modal" className="modal">
                 <div className="modal-box text-white">
                   <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -197,13 +198,13 @@ function Navbar() {
                     Login
                   </button>
                   <button class="btn btn-ghost rounded-btn" 
-                    onClick={() =>document.getElementById("my_modal_4").showModal()}
+                    onClick={() =>document.getElementById("signup_modal").showModal()}
                   > 
                     Sign up
                   </button>
                 </div>
               </dialog>
-              <dialog id="my_modal_4" className="modal">
+              <dialog id="signup_modal" className="modal">
                 <div className="modal-box text-white">
                   <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
