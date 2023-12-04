@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./views/App";
-import Home from "./views/Home"
-import Bikes from "./views/Bikes"
+import Home from "./views/Home";
+import Bikes from "./views/Bikes";
 import Misc from "./views/Misc";
 import Account from "./views/Account";
 import Navbar from "./components/navbar";

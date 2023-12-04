@@ -1,8 +1,20 @@
 import "./Bikes.css";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
+import { basket } from "../components/itemMaps";
 
 function Bike() {
   const [item, setItem] = useState([]);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const handleBuyNow = (dataObj) => {
+    basket.addToBikeMap(dataObj);
+
+    setAddedToCart(true);
+
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 3000);
+  };
 
   const [loading, setLoading] = useState(false);
 
@@ -26,8 +38,6 @@ function Bike() {
       .then((response) => response.json())
       .then((item) => setItem(item));
   }, []);
-
-  // Need to implement filters still
 
   const applyFilters = async () => {
     const brand =
@@ -63,6 +73,34 @@ function Bike() {
 
   return (
     <div className="Bike">
+      {addedToCart && (
+        <div
+          role="alert"
+          class="alert alert-success"
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 50,
+            zIndex: 999,
+            maxWidth: "95%",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Your purchase has been confirmed!</span>
+        </div>
+      )}
       <header className="App-header">
         <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
           <div class="-m-1 flex flex-wrap md:-m-2">
@@ -153,7 +191,12 @@ function Bike() {
                         <h3>${dataObj.b_price}</h3>
                         <p className="text-sm">{dataObj.b_brand_name}</p>
                         <div className="card-actions justify-end">
-                          <button className="btn btn-primary">Buy Now</button>
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => handleBuyNow(dataObj)}
+                          >
+                            Buy Now
+                          </button>
                         </div>
                       </div>
                     </div>
