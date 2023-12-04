@@ -210,8 +210,9 @@ app.post("/login", (req, res) => {
   }
 });
 
+
 app.get("/getUser/:userId", (req, res) => {
-  console.log(req.params.userId);
+  console.log("Rtrieving Account: userID-" + req.params.userId);
   const userId = req.params.userId;
   if (!req.params.userId) {
     console.log("no user id provided");
@@ -220,20 +221,60 @@ app.get("/getUser/:userId", (req, res) => {
   }
 
   const custInfoQuery = "SELECT * FROM customer WHERE c_customer_id=$1;";
-  const ordersInfoQuery = "SELECT * FROM orders WHERE o_customer_id=$1;";
+  const ordersBikesQuery = "SELECT * FROM orders JOIN order_bike_items ON o_order_id=obi_order_id JOIN (SELECT b_bike_serial_num, b_model, b_price From bike) AS foo ON obi_bike_id=b_bike_serial_num WHERE o_customer_id=$1;"
+  const ordersMiscsQuery = "SELECT * FROM orders JOIN order_misc_items ON o_order_id=omi_order_id JOIN (SELECT mi_item_id, mi_item_name, mi_item_price From misc_items) AS foo ON omi_item_id=mi_item_id WHERE o_customer_id=$1;"
   const values = [userId];
 
   db.any(custInfoQuery, values)
     .then((data) => {
-      let result = { userInfo: {}, orders: []};
-      // order = [item:[], status, payment_info, store_id]
+      let result = { userInfo: {}, orders: {}};
+      // order = [orderid, item:[], status, payment_info, store_id]
       result["userInfo"] = data[0];
 
-      db.any(ordersInfoQuery, values)
+      db.any(ordersBikesQuery, values) 
         .then((data) => {
-          result["orders"] = data;
-          console.log(result);
-          res.send(result);
+          // console.log(data[0])
+          for(var i=0; i<data.length; i++){
+            let curr_order_id = data[i]['o_order_id'];
+            if(!result.orders.hasOwnProperty(curr_order_id)){
+              result.orders[curr_order_id] = {
+                store_id:     data[i]['o_store_id'],
+                status:       data[i]['o_status'], 
+                payment_info: data[i]['o_payment_info'], 
+                item:         [{name: data[i]['b_model'], quantity: data[i]['obi_quantity'], price: data[i]['b_price']}]
+              }
+            }
+            else{
+              result.orders[curr_order_id].item.push({name: data[i]['b_model'], quantity: data[i]['obi_quantity'], price: data[i]['b_price']});
+            }
+          }
+
+          db.any(ordersMiscsQuery, values) 
+          .then((data) => {
+            //console.log(data[0])
+            for(var i=0; i<data.length; i++){
+              let curr_order_id = data[i]['o_order_id'];
+              if(!result.orders.hasOwnProperty(curr_order_id)){
+                result.orders[curr_order_id] = {
+                  store_id:     data[i]['o_store_id'],
+                  status:       data[i]['o_status'], 
+                  payment_info: data[i]['o_payment_info'], 
+                  item:         [{name: data[i]['mi_item_name'], quantity: data[i]['omi_quantity'], price: data[i]['mi_item_price']}]
+                }
+              }
+              else{
+                result.orders[curr_order_id].item.push({name: data[i]['mi_item_name'], quantity: data[i]['omi_quantity'], price: data[i]['mi_item_price']});
+              }
+            }
+  
+            console.log(result);
+            res.send(result);
+          })
+          .catch((error) => {
+            console.log("ERROR: ", error);
+            res.end();
+          });
+
         })
         .catch((error) => {
           console.log("ERROR: ", error);

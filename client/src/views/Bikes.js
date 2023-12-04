@@ -25,10 +25,11 @@ function Bike() {
     fetch("http://localhost:3030/getBikes")
       .then((response) => response.json())
       .then((item) => setItem(item));
+    setLoading(false);
   }, []);
 
-  // Need to implement filters still
-
+  
+  // Filters
   const applyFilters = async () => {
     const brand =
       document.getElementById("brand-filter").value === "Brand"
