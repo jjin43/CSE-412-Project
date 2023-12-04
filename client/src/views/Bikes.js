@@ -1,7 +1,9 @@
 import "./Bikes.css";
 import { React, useState, useEffect } from "react";
+import { useBasket } from "../components/basketContext";
 
 function Bike() {
+  const basket = useBasket();
   const [item, setItem] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -26,6 +28,11 @@ function Bike() {
       .then((response) => response.json())
       .then((item) => setItem(item));
   }, []);
+
+  const handleBuyNowClick = (dataObj) => {
+    basket.addToBikeMap(dataObj);
+    basket.notifyBasketChange(); // Notify listeners about the basket change
+  };
 
   // Need to implement filters still
 
@@ -153,7 +160,12 @@ function Bike() {
                         <h3>${dataObj.b_price}</h3>
                         <p className="text-sm">{dataObj.b_brand_name}</p>
                         <div className="card-actions justify-end">
-                          <button className="btn btn-primary">Buy Now</button>
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => handleBuyNowClick(dataObj)}
+                          >
+                            Buy Now
+                          </button>
                         </div>
                       </div>
                     </div>
