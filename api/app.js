@@ -150,6 +150,40 @@ app.get("/getMisc", (req, res) => {
   }
 });
 
+app.post("/signup", (req, res) => {
+  if(!req.headers.name || !req.headers.email || !req.headers.password || !req.headers.payment_method){
+    console.log("Sign-up with insufficient parameter")
+    res.send("Missing Sign-up Information")
+  }
+
+  values = [req.headers.name, req.headers.email, req.headers.password, req.headers.payment_method]
+  let line = "INSERT INTO customer (c_name, c_email, c_password, c_payment_method) VALUES ($1, $2, $3, $4)"
+  db.any("SELECT * FROM customer Where c_email=$1", req.headers.email)
+  .then((data) => {
+    if(data[0]){
+      console.log("Signup Email Exists")
+      res.send({data:'Exists'})
+    }
+    else{
+      db.any(line, values)
+      .then((data) => {
+        console.log("DATA: ", JSON.stringify(data[0]));
+        res.json({data:'Success'});
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end()
+      });
+    }
+  })
+  .catch((error) => {
+    console.log("ERROR:", error);
+    res.send("Failed");
+  });
+
+  
+});
+
 app.post("/login", (req, res) => {
   if (!req.headers.username || !req.headers.password) {
     console.log("Incomplete Login");
