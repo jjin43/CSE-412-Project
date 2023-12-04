@@ -1,14 +1,15 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import "../index.css";
 import "./getCookie";
 import { setCookie, getCookie } from "./getCookie";
+import { basket } from "./itemMaps";
 
 function Navbar() {
   const [isLoggedIn, setLoginState] = useState(false);
-  const [signup_error, setSignupError] = useState("")
-  const [signup_state, setSignupState] = useState("")
-  const [signup_msg, setSignupMsg] = useState("")
+  const [signup_error, setSignupError] = useState("");
+  const [signup_state, setSignupState] = useState("");
+  const [signup_msg, setSignupMsg] = useState("");
 
   useEffect(() => {
     if (getCookie() != null) {
@@ -17,25 +18,25 @@ function Navbar() {
   });
 
   const confirmPW = async () => {
-    const signup_password = document.getElementById("signup_password_input").value;
+    const signup_password = document.getElementById(
+      "signup_password_input"
+    ).value;
     const confirm_password = document.getElementById("confirm_pw_input").value;
-    if(signup_password!==confirm_password){
-      setSignupError('Password Does Not Match')
-      return false
+    if (signup_password !== confirm_password) {
+      setSignupError("Password Does Not Match");
+      return false;
+    } else {
+      setSignupError("");
+      return true;
     }
-    else{
-      setSignupError("")
-      return true
-    }
-    
-  }
+  };
 
   const handleSignup = async () => {
     const username = document.getElementById("signup_username_input").value;
     const password = document.getElementById("signup_password_input").value;
     const fullname = document.getElementById("signup_name_input").value;
-    const payment =  document.getElementById("payment_method_input").value;
-    if(!username || !password || !fullname || !payment){
+    const payment = document.getElementById("payment_method_input").value;
+    if (!username || !password || !fullname || !payment) {
       alert("Please provide all missing information.");
       return;
     }
@@ -46,34 +47,31 @@ function Navbar() {
         name: fullname,
         email: username,
         password: password,
-        payment_method: payment
+        payment_method: payment,
       }),
     };
-  
-    const response = await fetch(`http://localhost:3030/signup`, requestOptions)
-    .then((response)=>(response.json())).then((data)=>{
-      console.log(data)
-      if(data.data=="Success"){
-        console.log("Signup Success");
-        setSignupState("Success");
-        setSignupMsg("Account Created Sucessfully under Email: " + username);
-        
-      }
-      else{
-        console.log("Signup Failed");
-        setSignupState("Failed");
-        if(data.data=="Exists")
-          setSignupMsg("Account Already Exists under Email: " + username)
-        else
-          setSignupMsg("Failed to Create Account, Try again later");
-      }
-    })
-    .catch((error)=>(setSignupMsg("Server Error, Try again later")));
 
-    document.getElementById('signup_return').showModal()
-    document.getElementById('signup_modal').close();
-  
-  }
+    const response = await fetch(`http://localhost:3030/signup`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.data == "Success") {
+          console.log("Signup Success");
+          setSignupState("Success");
+          setSignupMsg("Account Created Sucessfully under Email: " + username);
+        } else {
+          console.log("Signup Failed");
+          setSignupState("Failed");
+          if (data.data == "Exists")
+            setSignupMsg("Account Already Exists under Email: " + username);
+          else setSignupMsg("Failed to Create Account, Try again later");
+        }
+      })
+      .catch((error) => setSignupMsg("Server Error, Try again later"));
+
+    document.getElementById("signup_return").showModal();
+    document.getElementById("signup_modal").close();
+  };
 
   const handleLogin = async () => {
     const username = document.getElementById("username_input").value;
@@ -104,12 +102,13 @@ function Navbar() {
       console.log("login success");
     }
   };
-  
 
   const handleLogout = () => {
     document.cookie = "userID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setLoginState(false);
-  }
+    basket.clearMiscMap();
+    basket.clearBikeMap();
+  };
 
   return (
     <nav class="text-black">
@@ -147,7 +146,9 @@ function Navbar() {
               )}
               <dialog id="signup_return" className="modal">
                 <div className="modal-box">
-                  <h3 className="font-bold text-lg text-white">{signup_state}</h3>
+                  <h3 className="font-bold text-lg text-white">
+                    {signup_state}
+                  </h3>
                   <p className="py-4 text-white">{signup_msg}</p>
                   <div className="modal-action">
                     <form method="dialog">
@@ -196,9 +197,12 @@ function Navbar() {
                   >
                     Login
                   </button>
-                  <button class="btn btn-ghost rounded-btn" 
-                    onClick={() =>document.getElementById("signup_modal").showModal()}
-                  > 
+                  <button
+                    class="btn btn-ghost rounded-btn"
+                    onClick={() =>
+                      document.getElementById("signup_modal").showModal()
+                    }
+                  >
                     Sign up
                   </button>
                 </div>
@@ -212,7 +216,7 @@ function Navbar() {
                   </form>
                   <h3 className="font-bold text-lg">Login</h3>
                   <div class="form-control w-full max-w-xs">
-                  <label class="label">
+                    <label class="label">
                       <span id="signup_name" class="label-text">
                         Name
                       </span>
@@ -257,17 +261,20 @@ function Navbar() {
                         Confirm Password
                       </span>
                     </label>
-                      <input
-                        id="confirm_pw_input"
-                        type="password"
-                        placeholder="Enter your password again"
-                        class="input input-bordered w-full max-w-xs"
-                        onChange={confirmPW} 
-                        required
-                      />
-                      <text id="confirm_pw_error" style={{color:"red", display:"inline-block"}}>
-                        {signup_error}
-                      </text>
+                    <input
+                      id="confirm_pw_input"
+                      type="password"
+                      placeholder="Enter your password again"
+                      class="input input-bordered w-full max-w-xs"
+                      onChange={confirmPW}
+                      required
+                    />
+                    <text
+                      id="confirm_pw_error"
+                      style={{ color: "red", display: "inline-block" }}
+                    >
+                      {signup_error}
+                    </text>
                     <label class="label"></label>
                     <label class="label">
                       <span id="payment_method" class="label-text">
@@ -292,20 +299,13 @@ function Navbar() {
                 </div>
               </dialog>
               <div class="dropdown dropdown-end">
-                <label tabindex="0" class="btn btn-ghost rounded-btn">
-                  Basket
-                </label>
-                <ul
-                  tabindex="0"
-                  class="menu dropdown-content z-[1] p-2 shadow bg-primary rounded-box w-52 mt-4"
-                >
-                  <li>
-                    <a>Item 1</a>
-                  </li>
-                  <li>
-                    <a>Item 2</a>
-                  </li>
-                </ul>
+                {isLoggedIn ? (
+                  <label tabindex="0" class="btn btn-ghost rounded-btn">
+                    <a href="/">Checkout</a>
+                  </label>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </div>
