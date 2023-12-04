@@ -8,6 +8,7 @@ import Bikes from "./views/Bikes";
 import Misc from "./views/Misc";
 import Account from "./views/Account";
 import Navbar from "./components/navbar";
+import Checkout from "./views/Checkout";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -21,6 +22,7 @@ root.render(
         <Route path="/Bikes" element={<Bikes />} />
         <Route path="/Misc" element={<Misc />} />
         <Route path="/Account" element={<Account />} />
+        <Route path="/Checkout" element={<Checkout />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
