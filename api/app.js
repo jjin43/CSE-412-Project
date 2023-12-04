@@ -225,7 +225,8 @@ app.get("/getUser/:userId", (req, res) => {
 
   db.any(custInfoQuery, values)
     .then((data) => {
-      let result = { userInfo: {}, orders: [] };
+      let result = { userInfo: {}, orders: []};
+      // order = [item:[], status, payment_info, store_id]
       result["userInfo"] = data[0];
 
       db.any(ordersInfoQuery, values)

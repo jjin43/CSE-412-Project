@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 import "./getCookie";
 import { setCookie, getCookie } from "./getCookie";
@@ -106,8 +106,11 @@ function Navbar() {
   };
   
 
+  let navigate = useNavigate();
   const handleLogout = () => {
     document.cookie = "userID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    if(window.location.pathname=='/Account')
+      navigate('/')
     setLoginState(false);
   }
 
