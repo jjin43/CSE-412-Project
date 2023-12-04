@@ -22,8 +22,23 @@ function Account() {
     console.log(user)
     if(user.userInfo)
       setUserInfo([user.userInfo.c_customer_id,user.userInfo.c_email,user.userInfo.c_name,user.userInfo.c_payment_method])
-    
+    else
+      console.log("Not found")
+
   }, []);
+
+  const updateInfo =  () => {
+    setLoading(true);
+    const requestOptions = {
+      method: "GET",
+    };
+    fetch("http://localhost:3030/getUser/"+userId, requestOptions)
+    .then((response) => response.json())
+    .then((user) => setUser(user))
+    .catch((error) => console.log("ERROR: ", error))
+    .finally(() => setLoading(false));
+  setUserInfo([user.userInfo.c_customer_id,user.userInfo.c_email,user.userInfo.c_name,user.userInfo.c_payment_method])
+  }
 
   console.log(user);
   console.log(userId);
@@ -33,7 +48,7 @@ function Account() {
         <header className="App-header">
           <h1 className="">Account Info</h1>
           <br></br>
-          <div className="grid grid-cols-2 gap-16">
+          <div className="grid grid-cols-2 gap-16" onLoad={updateInfo}>
             
             <label>{"[Customer ID#]:" + userInfo[0]}</label>
             <label>{"[Email]: " + userInfo[1]}</label>
