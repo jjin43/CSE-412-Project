@@ -90,7 +90,7 @@ function Checkout() {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      if(data.state==1){
+      if(data.state=1){
         setCheckedOrderText('Success');
         setCheckedOrderID('New Order Created! OrderID-'+data.order_id);
         basket.clearBikeMap(); basket.clearMiscMap();
@@ -125,7 +125,7 @@ function Checkout() {
           <p class="py-4">{checkedOrderId}</p>
         </div>
       </dialog>
-      <h1 style={{ marginTop: 50 }}>Enter your information</h1>
+      <h1 className="text-xl font-bold" style={{ marginTop: 50 }}>Enter your information</h1>
       <input
         type="text"
         placeholder="Enter first name"
@@ -143,19 +143,20 @@ function Checkout() {
         <option value="PAYPAL">PAYPAL</option>
         <option value="BITCOIN">BITCOIN</option>
       </select>
+      <span>-----------------------------------------------------------------------------</span>
       <div class="flex flex-col space-y-10 h-screen items-center">
-        <h1>Current Basket</h1>
+        <h1 class='text-2xl font-bold'>Current Basket</h1>
         <div>
           <div>
             <ul>
               {bikeItems.map((item) =>
                 item.isVisible ? (
-                  <div className="flex flex-row items-center" key={item.key}>
+                  <div className="container mx-auto" key={item.key}>
                     <li style={{ marginRight: 15 }}>
                       {item.key.b_model} : ${item.key.b_price}
                     </li>
                     <button
-                      className="btn btn-error"
+                      className="btn btn-error btn-sm"
                       onClick={() => handleRemoveBikeItem(item.key)}
                     >
                       Remove
@@ -169,12 +170,12 @@ function Checkout() {
           <ul>
             {miscItems.map((item) =>
               item.isVisible ? (
-                <div className="flex flex-row items-center" key={item.key}>
+                <div className="container mx-auto" key={item.key}>
                   <li style={{ marginRight: 15 }}>
                     {item.key.mi_item_name} : ${item.key.mi_item_price}
                   </li>
                   <button
-                    className="btn btn-error"
+                    className="btn btn-error btn-sm"
                     onClick={() => handleRemoveMiscItem(item.key)}
                   >
                     Remove
@@ -183,11 +184,11 @@ function Checkout() {
               ) : null
             )}
           </ul>
-          <button
-          className="btn btn-error"
+        </div>
+        <button
+          className="btn btn-success btn-lg"
           onClick={handleCheckout}
         > Place Order </button>
-        </div>
       </div>
     </div>
   );
