@@ -37,6 +37,7 @@ function Bike() {
     fetch("http://localhost:3030/getBikes")
       .then((response) => response.json())
       .then((item) => setItem(item));
+    setLoading(false);
   }, []);
 
   const applyFilters = async () => {
@@ -115,7 +116,7 @@ function Bike() {
                   Filters
                 </label>
               </div>
-              <div className="drawer-side">
+              <div className="drawer-side z-20">
                 <label
                   htmlFor="my-drawer"
                   aria-label="close sidebar"

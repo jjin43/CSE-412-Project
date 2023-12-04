@@ -1,5 +1,5 @@
 import { React, useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 import "./getCookie";
 import { setCookie, getCookie } from "./getCookie";
@@ -10,6 +10,7 @@ function Navbar() {
   const [signup_error, setSignupError] = useState("");
   const [signup_state, setSignupState] = useState("");
   const [signup_msg, setSignupMsg] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (getCookie() != null) {
@@ -108,6 +109,7 @@ function Navbar() {
     setLoginState(false);
     basket.clearMiscMap();
     basket.clearBikeMap();
+    navigate("/");
   };
 
   return (
@@ -301,7 +303,7 @@ function Navbar() {
               <div class="dropdown dropdown-end">
                 {isLoggedIn ? (
                   <label tabindex="0" class="btn btn-ghost rounded-btn">
-                    <a href="/">Checkout</a>
+                    <a href="/Checkout">Checkout</a>
                   </label>
                 ) : (
                   <></>
