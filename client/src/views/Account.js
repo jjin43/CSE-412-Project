@@ -7,6 +7,7 @@ function Account() {
   const userId = getCookie();
   const [userInfo, setUserInfo] = useState(["", "", "", ""]);
   const [orders, setOrders] = useState([]);
+  const [orderIds, setOrderIds] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +35,7 @@ function Account() {
         }
 
         if (data.orders) {
+          setOrderIds(Object.keys(data.orders));
           setOrders(data.orders);
         }
       } catch (error) {
@@ -52,7 +54,9 @@ function Account() {
   return (
     <div className="Account">
       <header className="App-header">
-        <h1 className="" style={{ position: "absolute", top: 100 }}>
+        <br></br>
+        <br></br>
+        <h1 className="text-2xl font-bold tex-center">
           Account Info
         </h1>
         <br></br>
@@ -67,35 +71,47 @@ function Account() {
               <label>{"[Payment Method]:  " + userInfo[3]}</label>
             </div>
             <span className="flex-shrink mx-4 text-gray-400">
-              -----------------------------------------------------------------------------------
+              ----------------------------------------------------------------------------- 
             </span>
             <br />
-            <h1> Orders </h1>
+            <h1 className="text-2xl font-bold"> Orders </h1>
 
-            <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
+            <div class="container mx-auto px-5 py-3 lg:px-32 lg:pt-12">
               <div className="overflow-x-auto w-full">
-                <table className="table table-zebra">
+                <table className="table table divide-y-2">
                   {/* head */}
                   <thead>
                     <tr>
-                      <th></th>
-                      <th>Store</th>
-                      <th>Status</th>
-                      <th>Payment Info</th>
+                      <th className="text-lg">OrderID</th>
+                      <th className="text-lg">StoreID</th>
+                      <th className="text-lg">Items / Quantity / Price</th>
+                      <th className="text-lg">Status</th>
+                      <th className="text-lg">Payment Info</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="divide-y-2">
                     {Object.values(orders).map((order, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
+                      
+                      <tr key={orderIds}>
+                        <td>{orderIds[index]}</td>
                         <td>{order.store_id}</td>
+                        <tbody>
+                        {Object.values(order.item).map((item, i) => (
+                          <tr>
+                            <td>{item.name}</td>
+                            <td>{item.quantity}</td>
+                            <td>{item.price}</td>
+                          </tr>
+                        ))}
+                        </tbody>
                         <td>{order.status}</td>
                         <td>{order.payment_info}</td>
                       </tr>
-                    ))}
+                      )
+                    )}
                   </tbody>
                 </table>
-                {Object.keys(orders).length === 0 && <p>No orders found.</p>}
+                {Object.keys(orders).length === 0 && <h1 className="text-center text-sm italic" style={{marginTop:'36px'}}>-- No orders found --</h1>}
               </div>
             </div>
           </>
