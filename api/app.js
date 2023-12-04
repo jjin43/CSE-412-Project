@@ -44,6 +44,67 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
+app.post("/createorder", (req, res) => {
+
+  if(!req.body.customerID || !req.body.payment_method || !req.body.bike || !req.body.misc)
+    res.end()
+
+  console.log(req.body)
+  const customerID = req.body.customerID;
+  const pay_method = req.body.payment_method;
+  const bike = req.body.bike;
+  const misc = req.body.misc;
+
+  let order_id = '';
+  let values = [customerID, pay_method];
+  let line = "INSERT INTO orders (o_store_id, o_customer_id, o_payment_info, o_status) VALUES (1, $1, $2, 'PENDING'); Select \"o_order_id\" From orders Where o_order_id=lastval();";
+  db.any(line, values)
+  .then((data) => {
+    console.log("DATA: ", JSON.stringify(data[0]));
+    order_id = data[0].o_order_id;
+    for(var i=0; i<bike.length; i++){
+      let values = [order_id, bike[i].item_id, bike[i].quantity];
+      let line = "INSERT INTO order_bike_items (obi_order_id, obi_bike_id, obi_quantity) VALUES ($1, $2, $3);"
+      db.any(line, values)
+      .then((data) => {
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
+    }
+  
+    for(var i=0; i<misc.length; i++){
+      let values = [order_id, misc[i].item_id, misc[i].quantity]
+      let line = "INSERT INTO order_misc_items (omi_order_id, omi_item_id, omi_quantity) VALUES ($1, $2, $3);"
+      db.any(line, values)
+      .then((data) => {
+      })
+      .catch((error) => {
+        console.log("ERROR:", error);
+        res.end();
+      });
+    }
+  
+    values = [order_id];
+    line = "UPDATE orders SET o_status='INPROGRESS' WHERE o_order_id=$1";
+    db.any(line, values)
+    .then((data) => {
+    })
+    .catch((error) => {
+      console.log("ERROR:", error);
+      res.end();
+    });
+  
+    res.send({state: "1", order_id: order_id});
+  })
+  .catch((error) => {
+    console.log("ERROR:", error);
+    res.end();
+  });
+  
+});
+
 app.get("/getBikeBrands", (req, res) => {
   console.log(req.query);
   const line = "SELECT DISTINCT b_brand_name FROM bike";
