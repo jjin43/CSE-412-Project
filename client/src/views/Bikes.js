@@ -115,6 +115,7 @@ function Bike() {
                 >
                   Filters
                 </label>
+                {loading ? <p>Loading...</p> : <></>}
               </div>
               <div className="drawer-side z-20">
                 <label
