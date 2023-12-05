@@ -244,20 +244,30 @@ app.post("/signup", (req, res) => {
 
   
 });
-/* 
+
+app.get("/changePassword", function(req,res){
+  res.sendFile("changepassword.html",{
+    root: __dirname
+  });
+});
+
 app.post("/changePass", (req,res) => {
   if(!req.headers.username || !req.headers.password) {
     console.log("Pass change fail")
     res.send("Pass change field missing")
   }
-  let line = "SELECT * FROM customer WHERE c_email=$1 AND c_password=$2;";
-  values = [req.headers.username, req.headers.password]
-  if(newpass != c_password){
-    c_password = newpass;
-    newpass = NULL;
+  else{
+    user.changepass(req.headers.password, req.headers.newpassword, function(err){
+      if (err) {
+        res.send(err);
+      }
+      else {
+        res.send("Good pass change")
+      }
+    });
   }
-  })
-  */
+  });
+  
 
 app.post("/login", (req, res) => {
   if (!req.headers.username || !req.headers.password) {
