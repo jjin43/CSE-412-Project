@@ -244,6 +244,20 @@ app.post("/signup", (req, res) => {
 
   
 });
+/* 
+app.post("/changePass", (req,res) => {
+  if(!req.headers.username || !req.headers.password) {
+    console.log("Pass change fail")
+    res.send("Pass change field missing")
+  }
+  let line = "SELECT * FROM customer WHERE c_email=$1 AND c_password=$2;";
+  values = [req.headers.username, req.headers.password]
+  if(newpass != c_password){
+    c_password = newpass;
+    newpass = NULL;
+  }
+  })
+  */
 
 app.post("/login", (req, res) => {
   if (!req.headers.username || !req.headers.password) {
